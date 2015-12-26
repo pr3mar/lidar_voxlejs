@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/pr3mar/lidar_voxeljs/issues"
   },
-  "homepage": "https://github.com/pr3mar/lidar_voxeljs#readme"
+  "homepage": "https://github.com/pr3mar/lidar_voxeljs#readme",
+  "devDependencies": {
+    "voxel-engine": "^0.20.2"
+  }
 }
