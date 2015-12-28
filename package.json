@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/pr3mar/lidar_voxeljs#readme",
   "devDependencies": {
+    "bluebird": "^3.1.1",
     "browservefy": "0.0.10",
     "minecraft-mca": "^0.6.1",
     "voxel-engine": "^0.20.2",
