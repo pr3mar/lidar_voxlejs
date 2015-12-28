@@ -6,7 +6,7 @@
 var createGame = require('voxel-engine');
 var game = createGame({
     generate: function(x, y, z) { // flat world, 1 cube high
-        console.log(x, y, z);
+        //console.log(x, y, z);
         return y === 1 ? 1 : 0
     }
 });
