@@ -1,5 +1,6 @@
 /**
  * Created by pr3mar on 12/26/15.
+ * TODO: rearange the coordinates for faster loading of the chunks.
  */
 // browserify -t brfs index.js > bundle.js
 
