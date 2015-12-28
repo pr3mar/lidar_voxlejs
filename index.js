@@ -1,36 +1,47 @@
 /**
  * Created by pr3mar on 12/26/15.
  */
+// browserify -t brfs index.js > bundle.js
+
+var fs = require('fs');
+var util = require('util');
+//require.extensions['.asc'] = function (module, filename) {
+//    module.exports = fs.readFileSync(filename, 'utf8').split('\r\n');
+//};
 var Promise = require('bluebird');
 Promise.config({
     longStackTraces: true,
     warnings: true
 });
+//var fileName = 'chunks/0.0.chunk';
 
 if(!Promise) {
     console.log('get the damn library.');
 }
 
 load3DPoints()
-    .then(convertPointsTOXYZDB)
     .then(initVoxelJS);
 
 function load3DPoints() {
-    function r() {
-        return Math.random() - 0.5 * 1024 | 0;
-    }
-
-    var points = [];
-    var numPoints = 11000;
+    var points = {};
     var pointsPerTick = 1000;  // adjust for speed vs timeout
     var resolveFn;
+    var readData = fs.readFileSync('./chunks/0.0.chunk', 'utf8').split('\n');
+    var numPoints = readData.length ^ 2;
 
     function generatePoints() {
         var num = Math.min(numPoints, pointsPerTick);
-        for(var ii = 0; ii < num; ++ii) {
-            points.push([r(), r(), r()]);
+        for(var ii = 0, count = 0; (ii < (readData.length - 1)) || (count < num); ++ii) {
+            var currentRow = readData[ii].split(':');
+            var y = currentRow[0];
+            var currentRowXZ = currentRow[1].split(';');
+            for(var jj = 0; jj < currentRowXZ.length - 1; jj++) {
+                var xz = currentRowXZ[jj].split(',');
+                var x = xz[0], z = xz[1];
+                points[ x + ',' + y + ',' + z] = 1;
+                ++count;
+            }
         }
-
         numPoints -= num;
         if(numPoints) {
             setTimeout(generatePoints, 1);
@@ -45,37 +56,13 @@ function load3DPoints() {
     })
 }
 
-function convertPointsTOXYZDB(points) {
-    var ndx = 0;
-    var total = points.length;
-    var pointsPerTick = 1000;  // adjust for speed vs timeout
-    var xyzDB = {};
-    var resolveFn;
-
-    function addPointsToDB() {
-        var end = Math.min(ndx + pointsPerTick, total);
-        for(; ndx < end; ++ndx) {
-            xyzDB[points[ndx].join(",")] = 1;
-        }
-        if (end < total) {
-            setTimeout(addPointsToDB);
-        } else {
-            resolveFn(xyzDB);
-        }
-    }
-
-    return new Promise(function(resolve, reject) {
-        resolveFn = resolve;
-        addPointsToDB();
-    })
-}
-
 function initVoxelJS(pointDB) {
     var createGame = require('voxel-engine');
     var game = createGame({
-        generate: function (x, y, z) { // flat world, 1 cube high
-            //console.log(x, y, z);
-            return pointDB[x + ',' + y + ',' + z];
+        generate: function (x, y, z) {
+            if (typeof pointDB[x + ',' + z + ',' + y] !== 'undefined') {
+                return 1;
+            } else return 0;
         }
     });
 
@@ -86,5 +73,5 @@ function initVoxelJS(pointDB) {
 
     var dude = createPlayer();
     dude.possess();
-    dude.yaw.position.set(0, 100, 0);
+    dude.yaw.position.set(10, 3, 10);
 }
