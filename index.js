@@ -3,7 +3,12 @@
  */
 
 var createGame = require('voxel-engine');
-var game = createGame();
+var game = createGame({
+    generate: function(x, y, z) { // flat world, 1 cube high
+        console.log(x, y, z);
+        return y === 1 ? 1 : 0
+    }
+});
 
 var container = document.body;
 game.appendTo(container);
