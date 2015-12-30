@@ -75,11 +75,13 @@ function load3DPoints() {
 function initVoxelJS(pointDB) {
     var createGame = require('voxel-engine');
     var game = createGame({
+        materials: ['dirt', 'brick', ['grass', 'dirt', 'grass_dirt'], 'grass_dirt','grass' ],
         generate: function (x, y, z) {
             if (typeof pointDB[x + ',' + z + ',' + y] !== 'undefined') {
                 return pointDB[x + ',' + z + ',' + y];
             } else return 0;
-        }
+        },
+        chunkDistance: 4
     });
 
     var container = document.body;
@@ -89,5 +91,5 @@ function initVoxelJS(pointDB) {
 
     var dude = createPlayer();
     dude.possess();
-    dude.yaw.position.set(500, 100, 500);
+    dude.yaw.position.set(500, 50, 500);
 }
