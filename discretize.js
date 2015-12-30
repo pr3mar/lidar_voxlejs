@@ -9,6 +9,10 @@
 var fs = require('fs');
 var util = require('util');
 
+Array.prototype.max = function() {
+    return Math.max.apply(null, this);
+};
+
 function getContent(fileName) {
     return fs.readFileSync(fileName, 'utf8').split('\n');
 }
@@ -32,7 +36,7 @@ function getMinMax(data) {
     return [maxX, minX, maxY, minY, maxZ, minZ];
 }
 
-function vote(data, translateX, translateY, translateZ) {
+function vote(data, translateX, translateY, translateZ, type) {
     var len = data.length - 1;
     var line = data[0].split(';');
     var votes = {}, x, y, z;
@@ -42,41 +46,63 @@ function vote(data, translateX, translateY, translateZ) {
         y = Math.round(parseFloat(line[1]) - translateY);
         z = Math.round(parseFloat(line[2]) - translateZ);
         if (typeof votes[x + ',' + y + ',' + z] !== 'undefined') {
-            votes[x + ',' + y + ',' + z]++;
+            votes[x + ',' + y + ',' + z][0]++;
         } else {
-            votes[x + ',' + y + ',' + z] = 1;
+            if(type == 0)
+                votes[x + ',' + y + ',' + z] = [5, type];
+            else
+                votes[x + ',' + y + ',' + z] = [1, type];
         }
     }
     return votes;
 }
 
+function mergeData(data, lengths) {
+    var merged = {};
+    var maxLen = lengths.max();
+    var keys = [];
+    for(var i = 0; i < data.length; i++) {
+        keys.push(Object.keys(data[i]));
+    }
+    //console.log(maxLen);
+    //console.log(data.length);
+    //TODO: check if exists, check if equal
+    for( var i = 0; i < maxLen; i++) {
+        var currKey = keys[0][i];
+        var currAdd = data[0][currKey];
+        for (var j = 1; j < data.length; j++) {
+            var tmpKey = keys[j][i];
+            var tmpKey = data[j][tmpKey];
+            if( && currAdd[0] < tmp[0]){
+                currAdd = tmp;
+            }
+
+        }
+    }
+    return merged;
+}
+
 var dirName = './terrain/';
 var files = [
-    'buildings.asc',
-    'mediumVegetation.asc',
-    'lowVegetation.asc',
-    'highVegetation.asc'
+    'TM1_463_102.asc',          // 0 - terrain
+    'buildings.asc',            // 1 - buildings
+    'lowVegetation.asc',        // 2 - low vegetation
+    'mediumVegetation.asc',     // 3 - medium vegetation
+    'highVegetation.asc'        // 4 - high vegetation
 ];
 
 var data = [], len = [];
-//var minX = [], minY = [], minZ = [];
-//var maxX = [], maxY = [], maxZ = [];
-for (var i = 0; i < files.length; i++) {
-    console.log(dirName + files[i]);
+var terrain = getContent(dirName + files[0]);
+var minmax = getMinMax(terrain);
+terrain = vote(terrain, minmax[1], minmax[3], minmax[5], 0);
+data.push(terrain);
+len.push(Object.keys(terrain).length);
+for (var i = 1; i < files.length; i++) {
     var tmp = getContent(dirName + files[i]);
-    var minmax = getMinMax(tmp);
-    console.log(minmax);
-    //maxX.push(minmax[0]);
-    //minX.push(minmax[1]);
-    //maxY.push(minmax[2]);
-    //minY.push(minmax[3]);
-    //maxZ.push(minmax[4]);
-    //minZ.push(minmax[5]);
-    tmp = vote(tmp, minmax[1], minmax[3], minmax[5]);
+    tmp = vote(tmp, minmax[1], minmax[3], minmax[5], i);
     data.push(tmp);
     len.push(Object.keys(tmp).length);
 }
 
-console.log(len);
-
+var result = mergeData(data, len);
 //fs.writeFileSync('data.asc', JSON.stringify(votes, null, '\t'), 'utf8');
