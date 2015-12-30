@@ -80,7 +80,10 @@ function initVoxelJS(pointDB) {
             if (typeof pointDB[x + ',' + z + ',' + y] !== 'undefined') {
                 return pointDB[x + ',' + z + ',' + y];
             } else return 0;
-        }
+        },
+        chunkSize: 16,
+        chunkDistance: 4,
+        worldOrigin: [500, 0, 500]
     });
 
     var container = document.body;
@@ -88,7 +91,7 @@ function initVoxelJS(pointDB) {
 
     var createPlayer = require('voxel-player')(game);
 
-    var dude = createPlayer();
+    var dude = createPlayer('./textures/dude.png');
     dude.possess();
     dude.yaw.position.set(500, 20, 500);
 }
