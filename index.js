@@ -80,8 +80,7 @@ function initVoxelJS(pointDB) {
             if (typeof pointDB[x + ',' + z + ',' + y] !== 'undefined') {
                 return pointDB[x + ',' + z + ',' + y];
             } else return 0;
-        },
-        chunkDistance: 4
+        }
     });
 
     var container = document.body;
