@@ -28,12 +28,13 @@ function load3DPoints() {
     //var pointsPerTick = 100000;  // adjust for speed vs timeout
     var resolveFn;
     // ./chunks/0.0.chunk
-    var readData = fs.readFileSync('./chunks/TM1_463_102.asc', 'utf8').split('\r\n');
-    var line = readData[0].split(';');
+    //var readData = fs.readFileSync('./chunks/TM1_463_102.asc', 'utf8').split('\r\n');
+    var readData = fs.readFileSync('./data.asc', 'utf8').split('\n');
     var numPoints = readData.length;
-    var translateX = parseFloat(line[0]);
-    var translateY = parseFloat(line[1]);
-    var translateZ = parseFloat(line[2]);
+    //var line = readData[0].split(';');
+    //var translateX = parseFloat(line[0]);
+    //var translateY = parseFloat(line[1]);
+    //var translateZ = parseFloat(line[2]);
 
     function generatePoints() {
         var num = numPoints;
@@ -51,10 +52,10 @@ function load3DPoints() {
         //}
         for(var ii = 0; ii < num; ++ii) {
             line = readData[ii].split(';');
-            var x = parseFloat(line[0]) - translateX;
-            var y = parseFloat(line[1]) - translateY;
-            var z = Math.round(parseFloat(line[2]) - translateZ);
-            points[x + ',' + y + ',' + z] = Math.floor(Math.random()  * 4) + 1;
+            var x = parseFloat(line[0]);
+            var y = parseFloat(line[1]);
+            var z = Math.round(parseFloat(line[2]));
+            points[x + ',' + y + ',' + z] = parseFloat(line[3]) + 1;//Math.floor(Math.random()  * 4) + 1;
         }
 
         numPoints -= num;

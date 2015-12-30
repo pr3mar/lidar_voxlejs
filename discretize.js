@@ -57,26 +57,18 @@ function vote(data, translateX, translateY, translateZ, type) {
     return votes;
 }
 
-function mergeData(data, lengths) {
-    var merged = {};
-    var maxLen = lengths.max();
-    var keys = [];
-    for(var i = 0; i < data.length; i++) {
-        keys.push(Object.keys(data[i]));
-    }
-    //console.log(maxLen);
-    //console.log(data.length);
-    //TODO: check if exists, check if equal
-    for( var i = 0; i < maxLen; i++) {
-        var currKey = keys[0][i];
-        var currAdd = data[0][currKey];
-        for (var j = 1; j < data.length; j++) {
-            var tmpKey = keys[j][i];
-            var tmpKey = data[j][tmpKey];
-            if( && currAdd[0] < tmp[0]){
-                currAdd = tmp;
+function mergeData(data) {
+    var merged = data[0];
+    for(var i = 1; i < data.length; i++) {
+        var currDict = data[i];
+        for (var key in currDict) {
+            if(merged.hasOwnProperty(key)) {
+                if(currDict[key][0] > merged[key][0]) {
+                    merged[key] = currDict[key];
+                }
+            } else {
+                merged[key] = currDict[key];
             }
-
         }
     }
     return merged;
@@ -103,6 +95,12 @@ for (var i = 1; i < files.length; i++) {
     data.push(tmp);
     len.push(Object.keys(tmp).length);
 }
-
-var result = mergeData(data, len);
-//fs.writeFileSync('data.asc', JSON.stringify(votes, null, '\t'), 'utf8');
+console.log(len);
+var result = mergeData(data);
+console.log(Object.keys(result).length);
+fs.writeFileSync('data.asc', '', 'utf8');
+for (var key in result) {
+    var splitted = key.split(',');
+    fs.appendFileSync('data.asc', util.format('%d;%d;%d;%d\n', splitted[0], splitted[1], splitted[2], result[key][1]), 'utf8');
+}
+//fs.writeFileSync('data.asc', JSON.stringify(result, null, '\t'), 'utf8');
