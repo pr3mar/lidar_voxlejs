@@ -91,5 +91,5 @@ function initVoxelJS(pointDB) {
 
     var dude = createPlayer();
     dude.possess();
-    dude.yaw.position.set(500, 50, 500);
+    dude.yaw.position.set(500, 20, 500);
 }
