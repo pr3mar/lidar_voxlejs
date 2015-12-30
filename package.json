@@ -24,6 +24,7 @@
     "bluebird": "^3.1.1",
     "brfs": "^1.4.1",
     "browservefy": "0.0.10",
+    "jParser": "^1.0.2",
     "minecraft-mca": "^0.6.1",
     "voxel-engine": "^0.20.2",
     "voxel-player": "^0.1.0"
