@@ -8,6 +8,11 @@
 
 var fs = require('fs');
 var util = require('util');
+var TERRAIN = 0;
+var BUILDING = 1;
+var LOW_VEGETATION = 2;
+var MEDIUM_VEGETATION = 3;
+var HIGH_VEGETATION = 4;
 
 Array.prototype.max = function() {
     return Math.max.apply(null, this);
@@ -74,6 +79,28 @@ function mergeData(data) {
     return merged;
 }
 
+function fillBuildings(data) {
+    var splitted;
+    for(var key in data) {
+        splitted = key.split(',');
+        var x = parseFloat(splitted[0]);
+        var y = parseFloat(splitted[1]);
+        var z = parseFloat(splitted[2]);
+        var val = data[key][0];
+        var type = data[key][1];
+        if(type === BUILDING) {
+            z -= 1;
+            var joined = [x, y, z].join(',');
+            while(z >= 0 && !data.hasOwnProperty(joined)) {
+                data[joined] = [val, BUILDING];
+                z -= 1;
+                joined = [x, y, z].join(',');
+            }
+        }
+    }
+    return data;
+}
+
 var dirName = './terrain/';
 var files = [
     'TM1_463_102.asc',          // 0 - terrain
@@ -97,6 +124,7 @@ for (var i = 1; i < files.length; i++) {
 }
 console.log(len);
 var result = mergeData(data);
+result = fillBuildings(result);
 console.log(Object.keys(result).length);
 fs.writeFileSync('data.asc', '', 'utf8');
 for (var key in result) {
