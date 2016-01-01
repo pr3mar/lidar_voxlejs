@@ -25,6 +25,7 @@
     "brfs": "^1.4.1",
     "browservefy": "0.0.10",
     "jParser": "^1.0.2",
+    "logo-drone": "0.0.2",
     "minecraft-mca": "^0.6.1",
     "voxel-camera": "^0.1.1",
     "voxel-drone": "^0.2.1",

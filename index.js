@@ -87,11 +87,29 @@ function initVoxelJS(pointDB) {
     });
 
     var container = document.body;
+    var playerPositionContainer = document.getElementById('position');
     game.appendTo(container);
+
+    // voxel-drone returns a function to create a drone
+    var createDrone = require('voxel-drone');
+
+    // create a drone / add to the game
+    var drone = createDrone(game);
+    var item = drone.item();
+    item.mesh.position.set(473, 7, 500);
+    game.addItem(item);
+    drone.viewCamera();
+
+    // tell the drone to take off
+    //drone.takeoff();
 
     var createPlayer = require('voxel-player')(game);
 
     var dude = createPlayer('./textures/dude.png');
     dude.possess();
     dude.yaw.position.set(500, 20, 500);
+
+    game.on('tick', function(delta) {
+        playerPositionContainer.innerHTML = '[x = ' + Math.round(dude.yaw.position.x) + ',y = ' + Math.round(dude.yaw.position.y) + ', z = ' + Math.round(dude.yaw.position.z) + ']';
+    })
 }
