@@ -4,16 +4,42 @@
     <meta charset="UTF-8">
     <title>Lidar - voxeljs</title>
     <style>
-        #position {
-            position: absolute;
-            left: 10;
-            top: 10;
-            /*z-index: 100;*/
-        }
+        body{left:0; top:0; padding:0;}
+        .wrapper { position:fixed; left:10px; top: 10px;display: flex; width:100px; font-family:Consolas,'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; background-color: #000; color: #0C0; }
+        .col1, .col2 { flex-grow: 1; display:inline-block; border-left: 1px solid #666; background-color: #000; color: #0C0; }
+        .row1, .row2, .row3 { padding:0px 5px; }
+        .row1 { color: #B33233; }
+        .row2 { color: #10FC04; }
+        .row3 { color: #348AE1; }
     </style>
 </head>
 <body>
-<div id="position"></div>
+<body>
+<div class="wrapper" id="position">
+    <div class="col1">
+        <div class="row1">
+            x
+        </div>
+        <div class="row2">
+            y
+        </div>
+        <div class="row3">
+            z
+        </div>
+    </div>
+
+    <div class="col2">
+        <div class="row1" id="x">
+            0
+        </div>
+        <div class="row2" id="y">
+            0
+        </div>
+        <div class="row3" id="z">
+            0
+        </div>
+    </div>
+</div>
 <script src="bundle.js"></script>
 </body>
 </html>

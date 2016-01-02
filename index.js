@@ -87,7 +87,9 @@ function initVoxelJS(pointDB) {
     });
 
     var container = document.body;
-    var playerPositionContainer = document.getElementById('position');
+    var playerPositionContainerX = document.getElementById('x');
+    var playerPositionContainerY = document.getElementById('y');
+    var playerPositionContainerZ = document.getElementById('z');
     game.appendTo(container);
 
     // voxel-drone returns a function to create a drone
@@ -101,15 +103,17 @@ function initVoxelJS(pointDB) {
     drone.viewCamera();
 
     // tell the drone to take off
-    //drone.takeoff();
+    drone.takeoff();
 
     var createPlayer = require('voxel-player')(game);
 
     var dude = createPlayer('./textures/dude.png');
     dude.possess();
-    dude.yaw.position.set(500, 20, 500);
+    dude.yaw.position.set(500, 15, 1000);
 
     game.on('tick', function(delta) {
-        playerPositionContainer.innerHTML = '[x = ' + Math.round(dude.yaw.position.x) + ',y = ' + Math.round(dude.yaw.position.y) + ', z = ' + Math.round(dude.yaw.position.z) + ']';
+        playerPositionContainerX.innerHTML = Math.round(dude.yaw.position.x);
+        playerPositionContainerY.innerHTML = Math.round(dude.yaw.position.z);
+        playerPositionContainerZ.innerHTML = Math.round(dude.yaw.position.y);
     })
 }
