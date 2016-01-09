@@ -1,6 +1,9 @@
 /**
  * Created by pr3mar on 12/26/15.
  * TODO: rearange the coordinates for faster loading of the chunks.
+ * nalaganje sosednega kosa .las
+ * kje se nahajas (v katerem kosu),
+ * asinhrono
  */
 // browserify -t brfs index.js > bundle.js
 
@@ -29,7 +32,7 @@ function load3DPoints() {
     var resolveFn;
     // ./chunks/0.0.chunk
     //var readData = fs.readFileSync('./chunks/TM1_463_102.asc', 'utf8').split('\r\n');
-    var readData = fs.readFileSync('./data.asc', 'utf8').split('\n');
+    var readData = fs.readFileSync('./terrain/463_102_terrain.asc', 'utf8').split('\n');
     var numPoints = readData.length;
     //var line = readData[0].split(';');
     //var translateX = parseFloat(line[0]);
@@ -94,12 +97,14 @@ function initVoxelJS(pointDB) {
 
     // voxel-drone returns a function to create a drone
     var createDrone = require('voxel-drone');
-
     // create a drone / add to the game
     var drone = createDrone(game);
     var item = drone.item();
-    item.mesh.position.set(473, 7, 500);
+    item.mesh.position.set(430, 10, 600);
     game.addItem(item);
+    /**
+     * TODO: fix the drone drawing on screen!!!
+     */
     drone.viewCamera();
 
     // tell the drone to take off
@@ -109,7 +114,7 @@ function initVoxelJS(pointDB) {
 
     var dude = createPlayer('./textures/dude.png');
     dude.possess();
-    dude.yaw.position.set(500, 15, 1000);
+    dude.yaw.position.set(424, 8, 600);
 
     game.on('tick', function(delta) {
         playerPositionContainerX.innerHTML = Math.round(dude.yaw.position.x);

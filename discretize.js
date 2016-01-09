@@ -1,9 +1,6 @@
 /**
  * Created by pr3mar on 12/28/15.
- * implement a voting system to discretize the data
- * set a treshold, only most valuable data should be stored.
- * merge into a single file, add a 4th column for votes, set a fixed value (threshold) for terrain
- * concurence when generating the terain based on votes -> max of all is the type of voxel.
+ *
  */
 
 var fs = require('fs');
@@ -101,34 +98,53 @@ function fillBuildings(data) {
     return data;
 }
 
-var dirName = './terrain/';
-var files = [
-    'TM1_463_102.asc',          // 0 - terrain
-    'buildings.asc',            // 1 - buildings
-    'lowVegetation.asc',        // 2 - low vegetation
-    'mediumVegetation.asc',     // 3 - medium vegetation
-    'highVegetation.asc'        // 4 - high vegetation
-];
-
 var data = [], len = [];
-var terrain = getContent(dirName + files[0]);
-var minmax = getMinMax(terrain);
-terrain = vote(terrain, minmax[1], minmax[3], minmax[5], 0);
-data.push(terrain);
-len.push(Object.keys(terrain).length);
-for (var i = 1; i < files.length; i++) {
-    var tmp = getContent(dirName + files[i]);
-    tmp = vote(tmp, minmax[1], minmax[3], minmax[5], i);
-    data.push(tmp);
-    len.push(Object.keys(tmp).length);
-}
-console.log(len);
-var result = mergeData(data);
-result = fillBuildings(result);
-console.log(Object.keys(result).length);
-fs.writeFileSync('data.asc', '', 'utf8');
-for (var key in result) {
-    var splitted = key.split(',');
-    fs.appendFileSync('data.asc', util.format('%d;%d;%d;%d\n', splitted[0], splitted[1], splitted[2], result[key][1]), 'utf8');
-}
-//fs.writeFileSync('data.asc', JSON.stringify(result, null, '\t'), 'utf8');
+
+/**
+ * function to discretize the generated .asc files.
+ * FILE NAME CONVENTION:
+ * the file name HAS to contain the coordinates which it describes, for example
+ * 'TM_463_102.las' -> 463_102_ground.asc, 463_102_lowVegetation.asc, 463_102_mediumVegetation.asc, 463_102_highVegetation.asc
+ * therefore the name of the original .las file is required.
+ * it is used for further file naming when generating the next file
+ * files are generated in the following directory:
+ * ./terrain/generated/
+ * @param fileName
+ */
+module.exports = function discretize(fileName) {
+    var coords = fileName.substring(0, fileName.length - 4).split('/');
+    coords = coords[coords.length - 1].split('_');
+    coords = coords[1] + '_' + coords[2];
+
+    var dirName = './terrain/';
+    var files = [
+        dirName + 'TM1_' + coords +'.asc',             // 0 - (provided)  terrain
+        dirName + coords + '_buildings.asc',            // 1 - (generated) buildings
+        dirName + coords + '_lowVegetation.asc',        // 2 - (generated) low vegetation
+        dirName + coords + '_mediumVegetation.asc',     // 3 - (generated) medium vegetation
+        dirName + coords + '_highVegetation.asc'        // 4 - (generated) high vegetation
+    ];
+
+    var terrain = getContent(files[0]);
+    var minmax = getMinMax(terrain);
+    terrain = vote(terrain, minmax[1], minmax[3], minmax[5], 0);
+    data.push(terrain);
+    len.push(Object.keys(terrain).length);
+    for (var i = 1; i < files.length; i++) {
+        var tmp = getContent(files[i]);
+        tmp = vote(tmp, minmax[1], minmax[3], minmax[5], i);
+        data.push(tmp);
+        len.push(Object.keys(tmp).length);
+    }
+    //console.log(len);
+    var result = mergeData(data);
+    result = fillBuildings(result);
+    //console.log(Object.keys(result).length);
+    var output = dirName + coords + '_terrain.asc';
+    fs.writeFileSync(output, '', 'utf8');
+    for (var key in result) {
+        var splitted = key.split(',');
+        fs.appendFileSync(output, util.format('%d;%d;%d;%d\n', splitted[0], splitted[1], splitted[2], result[key][1]), 'utf8');
+    }
+    // fs.writeFileSync('data.asc', JSON.stringify(result, null, '\t'), 'utf8');
+};
