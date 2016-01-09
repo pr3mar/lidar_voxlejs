@@ -76,6 +76,11 @@ function load3DPoints() {
 }
 
 function initVoxelJS(pointDB) {
+
+    var originX  = 430;
+    var originY  = 10;
+    var originZ  = 600;
+
     var createGame = require('voxel-engine');
     var game = createGame({
         materials: ['dirt', 'brick', ['grass', 'dirt', 'grass_dirt'], 'grass_dirt','grass' ],
@@ -86,7 +91,7 @@ function initVoxelJS(pointDB) {
         },
         chunkSize: 16,
         chunkDistance: 4,
-        worldOrigin: [500, 0, 500]
+        worldOrigin: [originX, originY, originZ]
     });
 
     var container = document.body;
@@ -100,7 +105,7 @@ function initVoxelJS(pointDB) {
     // create a drone / add to the game
     var drone = createDrone(game);
     var item = drone.item();
-    item.mesh.position.set(430, 10, 600);
+    item.mesh.position.set(originX, originY, originZ);
     game.addItem(item);
     /**
      * TODO: fix the drone drawing on screen!!!
