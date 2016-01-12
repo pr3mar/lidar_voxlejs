@@ -77,10 +77,9 @@ function load3DPoints() {
 
 function initVoxelJS(pointDB) {
 
-    var originX  = 430;
-    var originY  = 10;
-    var originZ  = 600;
-
+    var originX  = 511;
+    var originY  = 7;
+    var originZ  = 447;
     var createGame = require('voxel-engine');
     var game = createGame({
         materials: ['dirt', 'brick', ['grass', 'dirt', 'grass_dirt'], 'grass_dirt','grass' ],
@@ -104,26 +103,27 @@ function initVoxelJS(pointDB) {
     var createDrone = require('voxel-drone');
     // create a drone / add to the game
     var drone = createDrone(game);
+    window.drone = drone;
     var item = drone.item();
-    item.mesh.position.set(originX, originY, originZ);
+    item.mesh.position.set(490, 20, 452);
     game.addItem(item);
-    /**
-     * TODO: fix the drone drawing on screen!!!
-     */
     drone.viewCamera();
 
     // tell the drone to take off
     drone.takeoff();
+    drone.clockwise(0.05);
+
+    // drone controls are not yet supported due to outdated packages.
 
     var createPlayer = require('voxel-player')(game);
 
     var dude = createPlayer('./textures/dude.png');
     dude.possess();
-    dude.yaw.position.set(424, 8, 600);
+    dude.yaw.position.set(originX, originY, originZ);
 
     game.on('tick', function(delta) {
         playerPositionContainerX.innerHTML = Math.round(dude.yaw.position.x);
         playerPositionContainerY.innerHTML = Math.round(dude.yaw.position.z);
         playerPositionContainerZ.innerHTML = Math.round(dude.yaw.position.y);
-    })
+    });
 }
