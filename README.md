@@ -20,5 +20,7 @@ visit this [link](pr3mar.github.io/lidar_voxlejs)
 4. whenever you change `index.js` run the following line of code:
 ```browserify -t brfs index.js > bundle.js```
 5. run `npm start`
-6. a `.las` file is also required, which can be downloaded [here](http://gis.arso.gov.si/evode/profile.aspx?id=atlas_voda_Lidar@Arso)
+6. open `localhost:8080` in your browser (Chrome is recommended)
+7. `wrapper.js` is the main script file which makes calls to every major file (`readLAS.js` and `discretize.js`), which generate the terrain file in the ./terrain subfolder
+8. a `.las` file is also required, which can be downloaded [here](http://gis.arso.gov.si/evode/profile.aspx?id=atlas_voda_Lidar@Arso)
 (Prenos podatkov GKOT (D96TM))
