@@ -2,19 +2,19 @@
 ### An attempt to visualize lidar data w/ voxeljs
 ___
 ## How to run the demo?
-1. clone the repository `git clone https://github.com/pr3mar/lidar_voxlejs`
-2. open `index.html` in the browser
-3. enjoy
+visit this [link](https://pr3mar.github.io/lidar_voxlejs/) **highly recommended**
 
 or
 
-visit this [link](pr3mar.github.io/lidar_voxlejs)
+1. clone the repository `git clone https://github.com/pr3mar/lidar_voxlejs.git`
+2. open `index.html` in the browser
+3. enjoy
 
 ***
 
 ## How to continue development?
 
-1. clone the repository `git clone https://github.com/pr3mar/lidar_voxlejs`
+1. clone the repository `git clone https://github.com/pr3mar/lidar_voxlejs.git`
 2. run `npm install`
 3. install global dependencies browserify and nodejs
 4. whenever you change `index.js` run the following line of code:
